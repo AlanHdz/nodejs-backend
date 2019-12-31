@@ -23,7 +23,12 @@ let placeSchema = new Schema({
     },
     avatarImage: String,
     openHour: Number,
-    closeHour: Number
+    closeHour: Number,
+    _user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 })
 
 placeSchema.methods.updateImage = function (path, imageType) {
@@ -36,7 +41,7 @@ placeSchema.methods.saveImageUrl = function (secure_url, imageType) {
 }
 
 placeSchema.pre('save', function(next) {
-    if (this._id) return next()
+    if (this.slug) return next()
     generateSlugAndContinue.call(this,0, next)
 })
 

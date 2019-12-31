@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Place = require('./Place')
 const mongooseBcrypt = require('mongoose-bcrypt')
 
 let userSchema = new mongoose.Schema({
@@ -22,6 +23,10 @@ userSchema.post('save', function(user, next){
             next()
         }
     })
+})
+
+userSchema.virtual('places').get(function () {
+    return Place.find({'_user': this._id})
 })
 
 userSchema.plugin(mongooseBcrypt)

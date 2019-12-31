@@ -9,6 +9,7 @@ function find(req, res, next) {
     Place.findOne({ slug: req.params.id })
         .then((place) => {
             req.place = place
+            req.mainObj = place
             next()
         }).catch((err) => {
             next(err)
@@ -31,6 +32,8 @@ function show(req, res) {
 
 function create(req, res, next)  {
     const params = helpers.paramsBuilder(validParams, req.body)
+    console.log(req.user)
+    params['_user'] = req.user.id
     Place.create(params).then(doc => {
         req.place = doc
         next()
