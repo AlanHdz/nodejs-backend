@@ -14,6 +14,16 @@ let userSchema = new mongoose.Schema({
     }
 })
 
+userSchema.post('save', function(user, next){
+    User.count({}).then(count => {
+        if (count == 1) {
+            User.update({ '_id': user._id }, { admin: true }).then(result => next())
+        } else {
+            next()
+        }
+    })
+})
+
 userSchema.plugin(mongooseBcrypt)
 
 const User = mongoose.model('User', userSchema)

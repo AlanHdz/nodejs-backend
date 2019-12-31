@@ -5,6 +5,7 @@ const logger = require('morgan');
 
 const places = require('./routes/places')
 const users = require('./routes/users')
+const sessions = require('./routes/sessions')
 
 const db = require('./config/database')
 
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/places', places)
 app.use('/users', users)
+app.use('/sessions', sessions)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
