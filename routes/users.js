@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const usersController = require('../controllers/UsersController')
+const sessionController = require('../controllers/SessionController')
 
-/* GET users listing. */
+
 router.route('/')
-  .post(usersController.create)
+    .post(usersController.create, 
+        sessionController.generateToken, 
+        sessionController.sendToken)
 module.exports = router;
