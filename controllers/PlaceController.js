@@ -1,4 +1,5 @@
 const Place = require('../models/Place')
+const FavoritePlace = require('../models/FavoritePlace')
 const upload = require('../config/upload')
 const uploader = require('../models/Uploader')
 const helpers = require('./helpers')

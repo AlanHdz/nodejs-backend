@@ -50,7 +50,15 @@ placeSchema.statics.validatesSlugCount = function (slug) {
         if (count > 0) return false
         return true
     })
-} 
+}
+
+placeSchema.virtual('usersplaces').get(function () {
+    return FavoritePlace.find({ '_place': this._id }, { '_user': true })
+        .then(favs => {
+            let usersIds = favs.map(fav => fav._user)
+            return User.find({ '_id': { $in: usersIds } })
+        })
+})
 
 placeSchema.plugin(mongoosePaginate)
 
@@ -65,6 +73,9 @@ function generateSlugAndContinue(count, next) {
     })
 }
 
-let Place = model('Place', placeSchema)
+const Place = model('Place', placeSchema)
 
 module.exports = Place
+
+const User = require('./User')
+const FavoritePlace = require('./FavoritePlace')

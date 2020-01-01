@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Place = require('./Place')
+
 const mongooseBcrypt = require('mongoose-bcrypt')
 
 let userSchema = new mongoose.Schema({
@@ -29,8 +29,19 @@ userSchema.virtual('places').get(function () {
     return Place.find({'_user': this._id})
 })
 
+userSchema.virtual('favorites').get(function () {
+    return FavoritePlace.find({'_user': this._id}, { '_place': true })
+        .then(favs => {
+            let placeIds = favs.map(fav => fav._place)
+            return Place.find({ '_id': { $in: placeIds } })
+        })
+})
+
 userSchema.plugin(mongooseBcrypt)
 
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
+
+const Place = require('./Place')
+const FavoritePlace = require('./FavoritePlace')
