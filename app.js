@@ -10,6 +10,12 @@ const sessions = require('./routes/sessions')
 const favorites = require('./routes/favorites')
 const visits = require('./routes/visits')
 const visitPlaces = require('./routes/visitPlaces')
+const applications = require('./routes/applications')
+
+const findAppBySecret = require('./middlewares/findAppBySecret')
+const findAppByApplicationId = require('./middlewares/findAppByApplicationId')
+const authApp = require('./middlewares/authApp')()
+const allowCORs = require('./middlewares/authCORs')()
 
 const db = require('./config/database')
 const secrets = require('./config/secrets')
@@ -22,7 +28,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(jwtMiddleware({ secret: secrets.jwtSecret }).unless({ path: ['/sessions', '/users'], method: 'GET' }))
+app.use(findAppBySecret)
+app.use(findAppByApplicationId)
+app.use(authApp.unless({ method: 'OPTIONS' }))
+app.use(allowCORs.unless({ path: '/public' }))
+
+app.use(jwtMiddleware({ secret: secrets.jwtSecret }).unless({ path: ['/sessions', '/users'], method: ['GET', 'OPTIONS'] }))
 
 app.use('/places', places)
 app.use('/users', users)
@@ -30,6 +41,7 @@ app.use('/sessions', sessions)
 app.use('/favorites', favorites)
 app.use('/visits', visits)
 app.use('/places', visitPlaces)
+app.use('/applications', applications)
 
 
 // error handler
