@@ -8,6 +8,8 @@ const places = require('./routes/places')
 const users = require('./routes/users')
 const sessions = require('./routes/sessions')
 const favorites = require('./routes/favorites')
+const visits = require('./routes/visits')
+const visitPlaces = require('./routes/visitPlaces')
 
 const db = require('./config/database')
 const secrets = require('./config/secrets')
@@ -26,6 +28,8 @@ app.use('/places', places)
 app.use('/users', users)
 app.use('/sessions', sessions)
 app.use('/favorites', favorites)
+app.use('/visits', visits)
+app.use('/places', visitPlaces)
 
 
 // error handler

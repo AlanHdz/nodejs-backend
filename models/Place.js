@@ -52,6 +52,10 @@ placeSchema.statics.validatesSlugCount = function (slug) {
     })
 }
 
+placeSchema.virtual('visits').get(function () {
+    return Visit.find({ '_place': this._id }).sort('-id')
+})
+
 placeSchema.virtual('usersplaces').get(function () {
     return FavoritePlace.find({ '_place': this._id }, { '_user': true })
         .then(favs => {
@@ -79,3 +83,4 @@ module.exports = Place
 
 const User = require('./User')
 const FavoritePlace = require('./FavoritePlace')
+const Visit = require('./Visit')
